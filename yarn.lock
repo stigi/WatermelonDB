@@ -5860,10 +5860,10 @@ quick-lru@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-1.1.0.tgz#4360b17c61136ad38078397ff11416e186dcfbb8"
 
-rambdax@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rambdax/-/rambdax-2.0.0.tgz#f71e03be923efbb4428a2caf267bb429461a3beb"
-  integrity sha512-VLfHjSOSfxRIZ46UHPOZ0kyWtKE+kNVE3yDaKr/aJxvgADbIeeYdSqw9r+NDwTk5OR3toK3jTJ2yfqcFQqpcTw==
+rambdax@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/rambdax/-/rambdax-2.5.0.tgz#cb9d254e217623266be0afaca0ef618f5e0dabfb"
+  integrity sha512-8wo8572f47nfcNCTMYtJDhwnvbLq7uvbgf18GmrfszXAyPc4rDbO+mLYbTFt+iA2myD+XJme//pUr4IDgWgJKg==
 
 randomatic@^3.0.0:
   version "3.1.1"
