@@ -41,6 +41,7 @@ export type Operator =
   | 'notIn'
   | 'between'
   | 'like'
+  | 'match'
 
 export type ColumnDescription = $RE<{ column: ColumnName }>
 export type ComparisonRight =
@@ -180,6 +181,10 @@ export function like(value: string): Comparison {
 
 export function sanitizeLikeString(value: string): string {
   return value.replace(/[^a-zA-Z0-9]/g, '_')
+}
+
+export function textMatches(value: string): Comparison {
+  return { operator: 'match', right: { value } }
 }
 
 export function column(name: ColumnName): ColumnDescription {

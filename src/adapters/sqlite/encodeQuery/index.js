@@ -58,14 +58,15 @@ const operators: { [Operator]: string } = {
   notIn: 'not in',
   between: 'between',
   like: 'like',
+  match: 'match',
 }
 
 const encodeComparison = (table: TableName<any>, comparison: Comparison) => {
   if (comparison.operator === 'between') {
     const { right } = comparison
-    return right.values ?
-      `between ${encodeValue(right.values[0])} and ${encodeValue(right.values[1])}` :
-      ''
+    return right.values
+      ? `between ${encodeValue(right.values[0])} and ${encodeValue(right.values[1])}`
+      : ''
   }
 
   return `${operators[comparison.operator]} ${getComparisonRight(table, comparison.right)}`
@@ -131,25 +132,25 @@ const encodeMethod = (
   needsDistinct: boolean,
 ): string => {
   if (countMode) {
-    return needsDistinct ?
-      `select count(distinct ${encodeName(table)}."id") as "count" from ${encodeName(table)}` :
-      `select count(*) as "count" from ${encodeName(table)}`
+    return needsDistinct
+      ? `select count(distinct ${encodeName(table)}."id") as "count" from ${encodeName(table)}`
+      : `select count(*) as "count" from ${encodeName(table)}`
   }
 
-  return needsDistinct ?
-    `select distinct ${encodeName(table)}.* from ${encodeName(table)}` :
-    `select ${encodeName(table)}.* from ${encodeName(table)}`
+  return needsDistinct
+    ? `select distinct ${encodeName(table)}.* from ${encodeName(table)}`
+    : `select ${encodeName(table)}.* from ${encodeName(table)}`
 }
 
 const encodeAssociation: (TableName<any>) => AssociationArgs => string = mainTable => ([
   joinedTable,
   association,
 ]) =>
-  association.type === 'belongs_to' ?
-    ` join ${encodeName(joinedTable)} on ${encodeName(joinedTable)}."id" = ${encodeName(
+  association.type === 'belongs_to'
+    ? ` join ${encodeName(joinedTable)} on ${encodeName(joinedTable)}."id" = ${encodeName(
         mainTable,
-      )}.${encodeName(association.key)}` :
-    ` join ${encodeName(joinedTable)} on ${encodeName(joinedTable)}.${encodeName(
+      )}.${encodeName(association.key)}`
+    : ` join ${encodeName(joinedTable)} on ${encodeName(joinedTable)}.${encodeName(
         association.foreignKey,
       )} = ${encodeName(mainTable)}."id"`
 
@@ -162,6 +163,7 @@ const encodeQuery = <T: Model>(query: Query<T>, countMode: boolean = false): str
   const hasJoins = !!query.description.join.length
   const associations = hasJoins ? query.associations : []
 
+  debugger
   const hasToManyJoins = associations.some(([, association]) => association.type === 'has_many')
 
   const sql =

@@ -43,7 +43,7 @@ describe('SQLite encodeQuery', () => {
       Q.where('col5', Q.lte(5)),
       Q.where('col6', Q.notEq(null)),
       Q.where('col7', Q.oneOf([1, 2, 3])),
-      Q.where('col8', Q.notIn(['"a"', '\'b\'', 'c'])),
+      Q.where('col8', Q.notIn(['"a"', "'b'", 'c'])),
       Q.where('col9', Q.between(10, 11)),
     ])
     expect(encodeQuery(query)).toBe(
@@ -100,6 +100,16 @@ describe('SQLite encodeQuery', () => {
     ])
     expect(encodeQuery(query)).toBe(
       `select "tasks".* from "tasks" join "projects" on "projects"."id" = "tasks"."project_id" where "projects"."left_column" <= "projects"."right_column" and ("projects"."left2" > "projects"."right2" or ("projects"."left2" is not null and "projects"."right2" is null)) and "projects"."_status" is not 'deleted' and "tasks"."_status" is not 'deleted'`,
+    )
+  })
+
+  it('encodes JOIN over FTS table', () => {
+    const query = new Query(mockCollection) //, [Q.on('tasks_fts', Q.textMatches('query'))])
+    expect(encodeQuery(query)).toBe(
+      `select "tasks".* from "tasks" ` +
+        `join "tasks_fts" on "tasks"."rowid" = "tasks_fts"."rowid" ` +
+        `where "tasks_fts" match query and ` +
+        ` and "tasks"."_status" is not 'deleted'`,
     )
   })
 })

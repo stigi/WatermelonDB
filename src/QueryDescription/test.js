@@ -463,4 +463,35 @@ describe('QueryDescription', () => {
       ],
     })
   })
+
+  it('supports textMatches as fts join', () => {
+    const query = Q.buildQueryDescription([
+      Q.Q.on('table_fts', 'foreign_column', 'value'),
+      Q.where('rowid', 'rowid'),
+      Q.on('foreign_table2', 'foreign_column2', Q.gt(Q.column('foreign_column3'))),
+    ])
+    expect(query).toEqual({
+      where: [],
+      join: [
+        {
+          type: 'on',
+          table: 'table_fts',
+          left: 'rowid',
+          comparison: {
+            operator: 'eq',
+            right: { value: 'rowid' },
+          },
+        },
+        {
+          type: 'on',
+          table: 'foreign_table2',
+          left: 'foreign_column2',
+          comparison: {
+            operator: 'gt',
+            right: { column: 'foreign_column3' },
+          },
+        },
+      ],
+    })
+  })
 })
